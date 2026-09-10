@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NextGen Analytics - Next Generation | Free GPT-6 Astra</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>NextGen Analytics - Next Generation | GPT-6 Astra File Editor</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://js.puter.com/v2/"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
@@ -42,15 +42,19 @@ body{background:#0a0a0a;color:#fff;min-height:100vh;display:flex;overflow:hidden
 .avatar{height:32px;width:32px;border-radius:50%;background:#fff;color:#000;display:grid;place-items:center;font-weight:600;font-size:12px}
 .chat-container{flex:1;display:flex;flex-direction:column;min-height:0}
 .topbar{height:56px;border-bottom:1px solid #1e1e1e;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:rgba(10,10,10,.8);backdrop-filter:blur(20px);position:sticky;top:0;z-index:10}
-.messages{flex:1;overflow-y:auto;padding:24px 20px;max-width:820px;margin:0 auto;width:100%}
+.messages{flex:1;overflow-y:auto;padding:24px 20px;max-width:860px;margin:0 auto;width:100%}
 .msg{display:flex;gap:12px;margin-bottom:20px}
 .msg.user{justify-content:flex-end}
-.bubble{max-width:72%;padding:14px 18px;border-radius:20px;font-size:14px;line-height:1.6;word-break:break-word}
+.bubble{max-width:78%;padding:14px 18px;border-radius:20px;font-size:14px;line-height:1.6;word-break:break-word;position:relative}
 .bubble.user{background:#fff;color:#000;border-bottom-right-radius:8px}
 .bubble.assistant{background:#171717;color:#e8e8e8;border:1px solid #262626;border-bottom-left-radius:8px}
-.bubble pre{margin:10px 0;padding:12px;background:#0f0f0f;border:1px solid #262626;border-radius:10px;overflow-x:auto;font-size:13px;white-space:pre-wrap}
+.code-block{margin:12px 0;background:#0f0f0f;border:1px solid #262626;border-radius:12px;overflow:hidden}
+.code-header{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#171717;border-bottom:1px solid #262626;font-size:11px;color:#9a9a9a}
+.code-content{padding:14px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;max-height:400px;overflow-y:auto}
+.btn-download-code{padding:6px 12px;border-radius:8px;background:#fff;color:#000;border:0;font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px}
+.btn-download-code:hover{background:#f0f0f0}
 .composer{position:sticky;bottom:0;padding:16px 20px;background:linear-gradient(to top,#0a0a0a,#0a0a0aee,transparent)}
-.composer-inner{max-width:820px;margin:0 auto}
+.composer-inner{max-width:860px;margin:0 auto}
 .quick-prompts{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:8px}
 .quick-btn{flex-shrink:0;height:32px;padding:0 14px;border-radius:99px;background:#111;border:1px solid #232323;color:#9a9a9a;font-size:12px;cursor:pointer}
 .quick-btn:hover{color:#fff;border-color:#333}
@@ -75,106 +79,97 @@ body{background:#0a0a0a;color:#fff;min-height:100vh;display:flex;overflow:hidden
 .modal.open{display:grid}
 .modal-box{width:100%;max-width:560px;background:#111;border:1px solid #262626;border-radius:20px;padding:20px;max-height:80vh;overflow-y:auto}
 .search{width:100%;height:40px;border-radius:10px;background:#171717;border:1px solid #262626;color:#fff;padding:0 14px;margin:12px 0;outline:0}
+.file-result{margin-top:12px;padding:12px;border-radius:12px;background:#143d1f;border:1px solid #1e5a2d}
+.file-result-title{font-size:12px;font-weight:600;color:#7ef0a0;display:flex;align-items:center;gap:6px}
 @media(max-width:640px){.hero-title{font-size:28px}.hero-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
   <div class="logo-area">
     <div class="logo">
       <div class="logo-icon">N</div>
       <div>
         <div class="logo-text">NextGen Analytics</div>
-        <div style="font-size:10px;color:#9a9a9a;margin-top:2px;letter-spacing:.05em">NEXT GENERATION • GPT-6 Astra</div>
+        <div style="font-size:10px;color:#9a9a9a;margin-top:2px;letter-spacing:.05em">NEXT GENERATION • FILE EDITOR</div>
       </div>
     </div>
-    <div style="margin-top:10px"><span class="badge-green"><span style="height:6px;width:6px;border-radius:50%;background:#7ef0a0;display:inline-block"></span> Apna System Active</span></div>
+    <div style="margin-top:10px"><span class="badge-green">● Apna System + File Export</span></div>
   </div>
-
   <button class="btn-new" id="newChatBtn">+ New Chat</button>
-
   <div class="history-section">
     <div class="history-title">◷ Recent Chats</div>
     <div id="historyList"></div>
     <button class="btn-detailed" id="viewHistoryBtn">↻ View Detailed History →</button>
-
     <div class="switch-section">
       <div class="switch-title">⚡ Free AI Switch</div>
-      <div class="switch-desc">Agar Astra ka token khatam ho jaye to same OAuth se in models pe free switch karo</div>
-      <button class="model-btn active" data-model="openai/gpt-6-astra"><span>GPT-6 Astra</span><span>●</span></button>
+      <div class="switch-desc">Astra quota khatam? In free models pe switch karo, same OAuth</div>
+      <button class="model-btn active" data-model="openai/gpt-6-astra"><span>GPT-6 Astra</span><span>● Best</span></button>
       <button class="model-btn" data-model="claude-3-5-sonnet"><span>Claude 3.5 Sonnet</span><span>Free</span></button>
       <button class="model-btn" data-model="openai/gpt-4o"><span>ChatGPT GPT-4o</span><span>Free</span></button>
       <button class="model-btn" data-model="google/gemini-2.0-flash"><span>Gemini 2.0 Flash</span><span>Free</span></button>
       <button class="model-btn" data-model="deepseek/deepseek-chat"><span>DeepSeek V3</span><span>Free</span></button>
     </div>
+    <div style="margin:12px;padding:12px;border-radius:12px;background:#111;border:1px solid #232323">
+      <div style="font-size:11px;font-weight:600;color:#7ef0a0">📁 File Editor Mode</div>
+      <div style="font-size:11px;color:#8a8a8a;margin-top:4px;line-height:1.4">File upload karo, Astra best code edit karke wapis downloadable file dega. Har code block ke saath Download button ayega.</div>
+    </div>
   </div>
-
-  <div class="user-card">
-    <div id="userBox"></div>
-  </div>
+  <div class="user-card"><div id="userBox"></div></div>
 </div>
 
-<!-- MAIN -->
 <div class="main">
   <div class="topbar">
     <div style="display:flex;align-items:center;gap:12px">
       <button id="menuBtn" style="display:none;height:36px;width:36px;border-radius:10px;background:#171717;border:1px solid #262626;color:#fff">☰</button>
       <div style="font-weight:600;font-size:14px">NextGen Analytics</div>
       <span id="modelBadge" style="padding:4px 10px;border-radius:99px;background:#fff;color:#000;font-size:11px;font-weight:600">openai/gpt-6-astra</span>
-      <span style="padding:4px 8px;border-radius:99px;background:#143d1f;border:1px solid #1e5a2d;color:#7ef0a0;font-size:10px">Har user apna system</span>
+      <span style="padding:4px 8px;border-radius:99px;background:#143d1f;border:1px solid #1e5a2d;color:#7ef0a0;font-size:10px">File Export Ready</span>
     </div>
     <div style="display:flex;gap:8px">
       <button id="clearBtn" style="height:32px;padding:0 12px;border-radius:99px;background:#171717;border:1px solid #262626;color:#9a9a9a;font-size:12px;cursor:pointer">Clear</button>
     </div>
   </div>
 
-  <!-- LOGIN HERO -->
   <div id="loginHero" class="login-hero">
     <div class="hero-card">
-      <div class="hero-badge">● Powered by GPT-6 Astra • Next Generation • Apna Apna System</div>
-      <h1 class="hero-title">NextGen Analytics<br><span style="color:#9a9a9a;font-size:24px;font-weight:500">Har User Apna System Use Karta Hai</span></h1>
-      <p class="hero-sub">Meta AI jaisa premium chat, lekin <b style="color:#fff">User-Pays Model</b>. Aap apne Puter account se login karte ho, apna free quota use karte ho. No shared API keys, full privacy. Developer ka zero kharcha.</p>
-      
+      <div class="hero-badge">● NextGen Analytics • Next Generation • File Upload + Best Code Export</div>
+      <h1 class="hero-title">Upload → Edit → Download<br><span style="color:#9a9a9a;font-size:24px;font-weight:500">Best Code File Wapis Milegi</span></h1>
+      <p class="hero-sub">File upload karo (HTML, JS, PY, etc), Astra <b style="color:#fff">best edited code</b> dega aur har code block ke saath <b style="color:#7ef0a0">Download File</b> button ayega. Direct apni file wapis download karo.</p>
       <div class="hero-grid">
-        <div class="hero-feature"><div style="font-weight:600;font-size:13px">🔐 Puter OAuth Login</div><div style="font-size:12px;color:#8a8a8a;margin-top:4px">No password storage, secure popup</div></div>
-        <div class="hero-feature"><div style="font-weight:600;font-size:13px">🔑 No API Keys</div><div style="font-size:12px;color:#8a8a8a;margin-top:4px">Puter handles billing automatically</div></div>
-        <div class="hero-feature"><div style="font-weight:600;font-size:13px">📎 File Upload</div><div style="font-size:12px;color:#8a8a8a;margin-top:4px">pdf, csv, py, js, images support</div></div>
-        <div class="hero-feature"><div style="font-weight:600;font-size:13px">👁 Vision + Code</div><div style="font-size:12px;color:#8a8a8a;margin-top:4px">Image understanding & coding</div></div>
+        <div class="hero-feature"><div style="font-weight:600;font-size:13px">📎 File Upload</div><div style="font-size:12px;color:#8a8a8a;margin-top:4px">HTML, JS, PY, CSS sab support</div></div>
+        <div class="hero-feature"><div style="font-weight:600;font-size:13px">✨ Best Code Edit</div><div style="font-size:12px;color:#8a8a8a;margin-top:4px">Astra optimize karke dega</div></div>
+        <div class="hero-feature"><div style="font-weight:600;font-size:13px">⬇️ Direct Download</div><div style="font-size:12px;color:#8a8a8a;margin-top:4px">Har code block download ready</div></div>
+        <div class="hero-feature"><div style="font-weight:600;font-size:13px">🔐 Apna System</div><div style="font-size:12px;color:#8a8a8a;margin-top:4px">Aapka quota, aapki privacy</div></div>
       </div>
-
-      <button class="btn-login" id="loginBtn">Sign in with Puter to Activate Your System</button>
-      <div style="font-size:11px;color:#6a6a6a;margin-top:10px">Puter OAuth • Secure • No API key needed • Each user uses own quota</div>
+      <button class="btn-login" id="loginBtn">Sign in with Puter to Activate File Editor</button>
     </div>
   </div>
 
-  <!-- CHAT CONTAINER -->
   <div id="chatContainer" class="chat-container" style="display:none">
     <div class="messages" id="messages"></div>
-    
     <div class="composer">
       <div class="composer-inner">
         <div class="quick-prompts">
-          <button class="quick-btn" data-prompt="Ek modern website banao HTML/CSS/JS me">Website banao</button>
-          <button class="quick-btn" data-prompt="Is code ko analyze karo aur improve karo">Code analyze karo</button>
-          <button class="quick-btn" data-prompt="Ek simple game banao JavaScript me">Game banao</button>
-          <button class="quick-btn" data-prompt="Data visualization banao">Data visualization</button>
+          <button class="quick-btn" data-prompt="Is file ko best practice se edit karo aur improved version do">File ko best banao</button>
+          <button class="quick-btn" data-prompt="Is code ko optimize karo aur bugs fix karo">Optimize + Fix</button>
+          <button class="quick-btn" data-prompt="Is file ko NextGen Analytics style me premium banao">Premium banao</button>
+          <button class="quick-btn" data-prompt="Is code ko explain karo aur improved file do">Explain + Improve</button>
         </div>
         <div class="file-chips" id="fileChips"></div>
         <div class="input-box">
           <button class="attach-btn" id="attachBtn">📎</button>
-          <textarea class="textarea" id="promptInput" placeholder="Message NextGen Analytics..." rows="1"></textarea>
+          <textarea class="textarea" id="promptInput" placeholder="File upload karo ya bolo 'is file ko best banao'..."></textarea>
           <button class="send-btn" id="sendBtn">↑</button>
-          <input type="file" id="fileInput" multiple hidden accept=".txt,.pdf,.js,.py,.ts,.tsx,.jsx,.json,.csv,.md,.html,.css,image/*">
+          <input type="file" id="fileInput" multiple hidden accept=".txt,.pdf,.js,.py,.ts,.tsx,.jsx,.json,.csv,.md,.html,.css,.xml,.java,.cpp,.c">
         </div>
-        <div style="text-align:center;font-size:11px;color:#5a5a5a;margin-top:10px">NextGen Analytics uses your own Puter quota • Private • User-Pays • Next Generation</div>
+        <div style="text-align:center;font-size:11px;color:#5a5a5a;margin-top:10px">NextGen Analytics • Upload file → Astra will edit → Download best code • Next Generation</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- HISTORY MODAL -->
 <div class="modal" id="historyModal">
   <div class="modal-box">
     <div style="display:flex;justify-content:space-between;align-items:center">
@@ -189,12 +184,12 @@ body{background:#0a0a0a;color:#fff;min-height:100vh;display:flex;overflow:hidden
 
 <script>
 let isLoggedIn=false, currentUser=null, currentModel='openai/gpt-6-astra', chats=[], currentChatId=null, attachedFiles=[], isThinking=false;
-
 const sidebar=document.getElementById('sidebar'), historyList=document.getElementById('historyList'), messagesEl=document.getElementById('messages'), promptInput=document.getElementById('promptInput'), sendBtn=document.getElementById('sendBtn'), loginBtn=document.getElementById('loginBtn'), loginHero=document.getElementById('loginHero'), chatContainer=document.getElementById('chatContainer'), userBox=document.getElementById('userBox'), modelBadge=document.getElementById('modelBadge'), fileInput=document.getElementById('fileInput'), fileChips=document.getElementById('fileChips'), historyModal=document.getElementById('historyModal'), detailedHistoryList=document.getElementById('detailedHistoryList');
 
-function loadChats(){try{chats=JSON.parse(localStorage.getItem('nextgen_chats')||'[]')}catch{chats=[]}}
-function saveChats(){localStorage.setItem('nextgen_chats',JSON.stringify(chats))}
+function loadChats(){try{chats=JSON.parse(localStorage.getItem('nextgen_chats_v2')||'[]')}catch{chats=[]}}
+function saveChats(){localStorage.setItem('nextgen_chats_v2',JSON.stringify(chats))}
 function generateId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function escapeHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
 function renderHistory(){
   const filter=document.getElementById('historySearch')?.value.toLowerCase()||'';
@@ -205,12 +200,11 @@ function renderHistory(){
       if(filter && !chat.title.toLowerCase().includes(filter)) return;
       const div=document.createElement('button');
       div.className='history-item'+(chat.id===currentChatId?' active':'');
-      div.innerHTML=`<div style="flex:1;min-width:0"><div class="history-item-title">${escapeHtml(chat.title)}</div><div class="history-item-time">${chat.time} • ${chat.model}</div></div>`;
+      div.innerHTML=`<div style="flex:1;min-width:0"><div class="history-item-title">${escapeHtml(chat.title)}</div><div class="history-item-time">${chat.time} • ${chat.model.split('/').pop()}</div></div>`;
       div.onclick=()=>loadChat(chat.id);
       historyList.appendChild(div);
     })
   }
-  // detailed modal
   if(detailedHistoryList){
     detailedHistoryList.innerHTML='';
     if(chats.length===0) detailedHistoryList.innerHTML='<div style="color:#6a6a6a;text-align:center;padding:20px">No history</div>';
@@ -225,50 +219,83 @@ function renderHistory(){
   }
 }
 
-function escapeHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-
 function createNewChat(){
   const id=generateId();
-  const chat={id, title:'New Chat', time:new Date().toLocaleString(), model:currentModel, messages:[{id:'welcome', role:'assistant', content:`Welcome to **NextGen Analytics - Next Generation**! Main GPT-6 Astra hu.
+  const chat={id, title:'New Chat', time:new Date().toLocaleString(), model:currentModel, messages:[{id:'welcome', role:'assistant', content:`Welcome to **NextGen Analytics - File Editor Mode**! 📁
 
-Aapka **Apna System** active hai. Jo chahe pucho: website, code, game, data analysis. File attach kar sakte ho.
+**File kaise edit karwana hai?**
+1. Neeche 📎 se file upload karo (HTML, JS, PY, etc)
+2. Bolo "is file ko best banao" ya "optimize karo"
+3. Main **best edited code** dunga + **Download button** har code block ke saath
 
-Shuru karein?`, ts:new Date().toLocaleTimeString()}]};
-  chats.push(chat);
-  currentChatId=id;
-  saveChats(); renderHistory(); renderMessages();
+Aapki file ka improved version direct download kar sakoge. Shuru karein?`, ts:new Date().toLocaleTimeString()}]};
+  chats.push(chat); currentChatId=id; saveChats(); renderHistory(); renderMessages();
 }
 
-function loadChat(id){
-  currentChatId=id; const chat=chats.find(c=>c.id===id); if(!chat) return; if(chat.model) {currentModel=chat.model; updateModelUI();}
-  renderHistory(); renderMessages(); historyModal.classList.remove('open');
+function loadChat(id){currentChatId=id; const chat=chats.find(c=>c.id===id); if(!chat) return; if(chat.model){currentModel=chat.model; updateModelUI();} renderHistory(); renderMessages(); historyModal.classList.remove('open');}
+
+function formatContentWithDownload(s){
+  if(!s) return '';
+  // First escape, then handle code blocks with download
+  let codeBlocks=[];
+  let html=escapeHtml(s);
+  // Handle ```lang code ```
+  html=html.replace(/```(\w+)?\n?([\s\S]*?)```/g,(match, lang, code)=>{
+    const id='code_'+Math.random().toString(36).slice(2,8);
+    const cleanCode=code.trim();
+    const fileExt=lang==='html'?'html':lang==='javascript'?'js':lang==='python'?'py':lang==='css'?'css':lang||'txt';
+    codeBlocks.push({id, code:cleanCode, lang:lang||'txt', ext:fileExt});
+    return `__CODEBLOCK_${id}__`;
+  });
+  html=html.replace(/__CODEBLOCK_(code_\w+)__/g,(m, id)=>{
+    const block=codeBlocks.find(b=>b.id===id);
+    if(!block) return '';
+    return `<div class="code-block">
+      <div class="code-header">
+        <span>📄 ${block.lang} • best code • ${block.ext}</span>
+        <button class="btn-download-code" onclick="downloadCode('${block.id}') ">⬇️ Download .${block.ext}</button>
+      </div>
+      <div class="code-content">${escapeHtml(block.code)}</div>
+    </div>`;
+  });
+  html=html.replace(/\*\*(.*?)\*\*/g,'<b style="color:#fff">$1</b>');
+  html=html.replace(/\n/g,'<br>');
+  // store blocks globally
+  codeBlocks.forEach(b=>{window._codeBlocks=window._codeBlocks||{}; window._codeBlocks[b.id]=b;});
+  return html;
+}
+
+window.downloadCode=(id)=>{
+  const block=window._codeBlocks?.[id];
+  if(!block) return;
+  const blob=new Blob([block.code], {type:'text/plain'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=`NextGen-Best-Code-${Date.now()}.${block.ext}`;
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
 }
 
 function renderMessages(){
   const chat=chats.find(c=>c.id===currentChatId);
   if(!chat){messagesEl.innerHTML='';return;}
   messagesEl.innerHTML='';
+  window._codeBlocks={};
   chat.messages.forEach(m=>{
     const div=document.createElement('div');
     div.className='msg '+(m.role==='user'?'user':'');
-    const content=formatContent(m.content);
+    const content=formatContentWithDownload(m.content);
     if(m.role==='user'){
       div.innerHTML=`<div class="bubble user">${content}</div>`;
     } else {
-      div.innerHTML=`<div style="height:32px;width:32px;border-radius:50%;background:#171717;border:1px solid #262626;display:grid;place-items:center;flex-shrink:0;font-size:12px;font-weight:700">N</div><div><div class="bubble assistant">${content}</div><div style="font-size:11px;color:#6a6a6a;margin-top:6px;padding-left:4px">${m.ts||''} • NextGen Analytics • ${currentModel}</div></div>`;
+      let fileResult='';
+      if(m.role==='assistant' && m.content.includes('```')){
+        fileResult=`<div class="file-result"><div class="file-result-title">✅ Best Code Ready - Neeche se Download karo</div><div style="font-size:11px;color:#a0d0a0;margin-top:4px">Har code block ke upar Download button hai, click karke file wapis lo</div></div>`;
+      }
+      div.innerHTML=`<div style="height:32px;width:32px;border-radius:50%;background:#171717;border:1px solid #262626;display:grid;place-items:center;flex-shrink:0;font-size:12px;font-weight:700">N</div><div style="flex:1;min-width:0"><div class="bubble assistant">${content}</div>${fileResult}<div style="font-size:11px;color:#6a6a6a;margin-top:6px;padding-left:4px">${m.ts||''} • NextGen Analytics • ${currentModel}</div></div>`;
     }
     messagesEl.appendChild(div);
   });
   messagesEl.scrollTop=messagesEl.scrollHeight;
-}
-
-function formatContent(s){
-  if(!s) return '';
-  let r=s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  r=r.replace(/```(\w+)?\n?([\s\S]*?)```/g,(a,b,c)=>`<pre><code>${c.trim()}</code></pre>`);
-  r=r.replace(/\*\*(.*?)\*\*/g,'<b style="color:#fff">$1</b>');
-  r=r.replace(/\n/g,'<br>');
-  return r;
 }
 
 async function checkAuth(){
@@ -280,36 +307,27 @@ async function checkAuth(){
     } else showLogin();
   }catch{showLogin()}
 }
-
 function showLogin(){
   loginHero.style.display='flex'; chatContainer.style.display='none';
-  userBox.innerHTML='<div style="padding:10px;border-radius:10px;background:#171717;border:1px solid #262626;font-size:12px"><div>Not signed in</div><div style="color:#8a8a8a;font-size:11px;margin-top:4px">Login to activate Apna System</div></div>';
+  userBox.innerHTML='<div style="padding:10px;border-radius:10px;background:#171717;border:1px solid #262626;font-size:12px"><div>Not signed in</div><div style="color:#8a8a8a;font-size:11px;margin-top:4px">Login to activate File Editor</div></div>';
 }
 function showApp(){
   loginHero.style.display='none'; chatContainer.style.display='flex';
-  userBox.innerHTML=`<div class="user-info"><div class="avatar">${(currentUser.username||'U').slice(0,1).toUpperCase()}</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${currentUser.username||'User'}</div><div style="font-size:11px;color:#8a8a8a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${currentUser.email||'Puter Account'}</div><div style="margin-top:4px;display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:99px;background:#143d1f;border:1px solid #1e5a2d;color:#7ef0a0;font-size:9px">● Quota Active</div></div><button id="logoutBtn" style="height:28px;width:28px;border-radius:8px;background:#1e1e1e;border:1px solid #2a2a2a;color:#8a8a8a;cursor:pointer">↪</button></div>`;
+  userBox.innerHTML=`<div class="user-info"><div class="avatar">${(currentUser.username||'U').slice(0,1).toUpperCase()}</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${currentUser.username||'User'}</div><div style="font-size:11px;color:#8a8a8a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${currentUser.email||'Puter Account'}</div><div style="margin-top:4px;display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:99px;background:#143d1f;border:1px solid #1e5a2d;color:#7ef0a0;font-size:9px">● File Export Active</div></div><button id="logoutBtn" style="height:28px;width:28px;border-radius:8px;background:#1e1e1e;border:1px solid #2a2a2a;color:#8a8a8a;cursor:pointer">↪</button></div>`;
   document.getElementById('logoutBtn')?.addEventListener('click', logout);
   if(chats.length===0) createNewChat(); else {currentChatId=chats[chats.length-1].id; renderHistory(); renderMessages();}
 }
-
 async function login(){
   try{
-    loginBtn.textContent='Loading...';
+    document.getElementById('loginBtn').textContent='Loading...';
     await window.puter.auth.signIn();
     const u=await window.puter.auth.getUser();
     currentUser={username:u?.username, email:u?.email};
     isLoggedIn=true; showApp(); renderHistory();
-  }catch(e){alert('Login failed: '+(e.message||'')); loginBtn.textContent='Sign in with Puter to Activate Your System';}
+  }catch(e){alert('Login failed'); document.getElementById('loginBtn').textContent='Sign in with Puter to Activate File Editor';}
 }
-async function logout(){
-  try{await window.puter.auth.signOut();}catch{}
-  isLoggedIn=false; currentUser=null; showLogin();
-}
-
-function updateModelUI(){
-  modelBadge.textContent=currentModel;
-  document.querySelectorAll('.model-btn').forEach(b=>{b.classList.toggle('active', b.dataset.model===currentModel)});
-}
+async function logout(){try{await window.puter.auth.signOut();}catch{} isLoggedIn=false; currentUser=null; showLogin();}
+function updateModelUI(){modelBadge.textContent=currentModel; document.querySelectorAll('.model-btn').forEach(b=>{b.classList.toggle('active', b.dataset.model===currentModel)});}
 
 async function sendMessage(text){
   const t=(text||promptInput.value).trim(); if(!t && attachedFiles.length===0) return; if(isThinking) return;
@@ -317,17 +335,17 @@ async function sendMessage(text){
   if(chat.title==='New Chat' && t) {chat.title=t.slice(0,50); chat.time=new Date().toLocaleString();}
 
   let fileContext=''; if(attachedFiles.length>0){
-    fileContext=attachedFiles.map(f=>`\n--- File: ${f.name} ---\n${f.content||'[binary/image]'}\n--- End ---`).join('\n');
+    fileContext=attachedFiles.map(f=>`\n--- FILE: ${f.name} ---\n${f.content||'[binary/image]'}\n--- END FILE: ${f.name} ---`).join('\n');
+    fileContext+=`\n\nINSTRUCTION: User uploaded these files. Edit them to BEST CODE. Provide improved version as code block with language tag. Make it production ready. At end, say file is ready to download.`;
   }
   const fullPrompt=t+fileContext;
 
-  const userMsg={id:generateId(), role:'user', content:t||'Attached files', ts:new Date().toLocaleTimeString(), files:attachedFiles.map(f=>({name:f.name}))};
+  const userMsg={id:generateId(), role:'user', content:t||`Attached ${attachedFiles.length} file(s) for editing`, ts:new Date().toLocaleTimeString(), files:attachedFiles.map(f=>({name:f.name}))};
   chat.messages.push(userMsg);
   promptInput.value=''; attachedFiles=[]; renderFileChips(); saveChats(); renderMessages(); renderHistory();
   isThinking=true; sendBtn.disabled=true;
 
-  // thinking indicator
-  const thinkingDiv=document.createElement('div'); thinkingDiv.id='thinking'; thinkingDiv.className='msg'; thinkingDiv.innerHTML='<div style="height:32px;width:32px;border-radius:50%;background:#171717;border:1px solid #262626;display:grid;place-items:center">N</div><div class="bubble assistant">GPT-6 Astra soch raha hai... NextGen Analytics</div>'; messagesEl.appendChild(thinkingDiv); messagesEl.scrollTop=messagesEl.scrollHeight;
+  const thinkingDiv=document.createElement('div'); thinkingDiv.id='thinking'; thinkingDiv.className='msg'; thinkingDiv.innerHTML='<div style="height:32px;width:32px;border-radius:50%;background:#171717;border:1px solid #262626;display:grid;place-items:center">N</div><div class="bubble assistant">📁 File analyze karke best code bana raha hu... Download ready hoga</div>'; messagesEl.appendChild(thinkingDiv); messagesEl.scrollTop=messagesEl.scrollHeight;
 
   try{
     const puter=window.puter;
@@ -338,11 +356,11 @@ async function sendMessage(text){
     try{res=await puter.ai.chat(history,{model:currentModel});}catch{res=await puter.ai.chat(fullPrompt,{model:currentModel});}
     const textResp=typeof res==='string'?res:res?.message?.content||res?.content||'Response received';
     document.getElementById('thinking')?.remove();
-    chat.messages.push({id:generateId(), role:'assistant', content:textResp, ts:new Date().toLocaleTimeString()});
+    chat.messages.push({id:generateId(), role:'assistant', content:textResp+`\n\n✅ **File ready!** Upar code block me **Download .ext** button se best code file download karo.`, ts:new Date().toLocaleTimeString()});
     saveChats(); renderMessages(); renderHistory();
   }catch(e){
     document.getElementById('thinking')?.remove();
-    const errMsg=`Error: ${e.message||'AI failed'}. Agar quota khatam ho gaya to Free AI Switch se dusra model try karo.`;
+    const errMsg=`Error: ${e.message||'AI failed'}. Agar quota khatam to Free AI Switch se dusra model try karo.`;
     chat.messages.push({id:generateId(), role:'assistant', content:errMsg, ts:new Date().toLocaleTimeString()});
     saveChats(); renderMessages();
   }finally{isThinking=false; sendBtn.disabled=false;}
@@ -354,20 +372,16 @@ function renderFileChips(){
   })
 }
 window.removeFile=(i)=>{attachedFiles.splice(i,1); renderFileChips();}
-
 async function handleFiles(files){
   for(const file of files){
     const obj={name:file.name, type:file.type, size:file.size};
-    if(file.type.startsWith('image/')){obj.preview=URL.createObjectURL(file); try{obj.content=await file.text();}catch{obj.content='[image]';}}
-    else {try{const txt=await file.text(); obj.content=txt.slice(0,15000);}catch{obj.content='[binary file]'}}
+    try{const txt=await file.text(); obj.content=txt.slice(0,20000);}catch{obj.content=`[binary file ${file.name}]`}
     attachedFiles.push(obj); if(attachedFiles.length>6) attachedFiles=attachedFiles.slice(0,6);
   }
   renderFileChips();
 }
-
 window.deleteChat=(id)=>{chats=chats.filter(c=>c.id!==id); if(currentChatId===id) currentChatId=chats.length?chats[chats.length-1].id:null; saveChats(); renderHistory(); if(currentChatId) renderMessages(); else if(chats.length===0) createNewChat();}
 
-// events
 document.getElementById('newChatBtn').addEventListener('click', createNewChat);
 document.getElementById('clearBtn').addEventListener('click', ()=>{if(currentChatId){const c=chats.find(x=>x.id===currentChatId); if(c){c.messages=c.messages.slice(0,1); saveChats(); renderMessages();}}});
 sendBtn.addEventListener('click', ()=>sendMessage());
@@ -377,16 +391,13 @@ document.getElementById('attachBtn').addEventListener('click', ()=>fileInput.cli
 fileInput.addEventListener('change', e=>handleFiles(e.target.files));
 document.querySelectorAll('.quick-btn').forEach(b=>b.addEventListener('click', ()=>sendMessage(b.dataset.prompt)));
 document.querySelectorAll('.model-btn').forEach(b=>b.addEventListener('click', ()=>{currentModel=b.dataset.model; const c=chats.find(x=>x.id===currentChatId); if(c) c.model=currentModel; updateModelUI(); saveChats(); renderHistory();}));
-loginBtn?.addEventListener('click', login);
+document.getElementById('loginBtn')?.addEventListener('click', login);
 document.getElementById('viewHistoryBtn').addEventListener('click', ()=>{historyModal.classList.add('open'); renderHistory();});
 document.getElementById('closeModal').addEventListener('click', ()=>historyModal.classList.remove('open'));
 document.getElementById('historySearch').addEventListener('input', renderHistory);
 document.getElementById('clearAllHistory').addEventListener('click', ()=>{if(confirm('Clear all history?')){chats=[]; saveChats(); renderHistory(); createNewChat(); historyModal.classList.remove('open');}});
-document.getElementById('menuBtn').addEventListener('click', ()=>sidebar.classList.toggle('mobile-hidden'));
 
 loadChats(); renderHistory(); checkAuth();
-if(window.innerWidth<1024) sidebar.classList.add('mobile-hidden');
-window.addEventListener('resize', ()=>{if(window.innerWidth>=1024) sidebar.classList.remove('mobile-hidden')});
 </script>
 </body>
 </html>
