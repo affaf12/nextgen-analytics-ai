@@ -19,7 +19,7 @@ jobs:
       - name: Build the frontend
         working-directory: frontend
         run: |
-          npm ci
+          npm install
           npm run build
 
       - name: Copy frontend build into backend/static
