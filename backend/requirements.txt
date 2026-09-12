@@ -1,4 +1,2 @@
 fastapi[standard]>=0.141.0
-python-multipart==0.0.9
-pydantic==2.9.2
 chardet==5.2.0
