@@ -27,12 +27,17 @@ jobs:
           rm -rf backend/static
           cp -r frontend/dist backend/static
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v3
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install FastAPI Cloud CLI
+        run: pip install "fastapi[standard]"
 
       - name: Deploy to FastAPI Cloud
         working-directory: backend
-        run: uv run fastapi deploy
+        run: fastapi deploy
         env:
           FASTAPI_CLOUD_TOKEN: ${{ secrets.FASTAPI_CLOUD_TOKEN }}
           FASTAPI_CLOUD_APP_ID: ${{ secrets.FASTAPI_CLOUD_APP_ID }}
