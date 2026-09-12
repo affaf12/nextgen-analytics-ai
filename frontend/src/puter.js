@@ -8,6 +8,8 @@ export const FREE_MODELS = [
   { id: 'openai/gpt-4o', label: 'ChatGPT GPT-4o', tag: 'Free' },
   { id: 'google/gemini-2.0-flash', label: 'Gemini 2.0 Flash', tag: 'Free' },
   { id: 'deepseek/deepseek-chat', label: 'DeepSeek V3', tag: 'Free' },
+  { id: 'nvidia/nemotron-3-super-120b-a12b', label: 'NVIDIA Nemotron 3 Super', tag: 'Free' },
+  { id: 'nvidia/nemotron-nano-9b-v2', label: 'NVIDIA Nemotron Nano', tag: 'Free' },
 ]
 
 function sdk() {
