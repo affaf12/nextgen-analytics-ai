@@ -1,50 +1,43 @@
-name: Deploy frontend to GitHub Pages
+name: Deploy to FastAPI Cloud
 
 on:
   push:
     branches: [main]
-    paths:
-      - "frontend/**"
-      - ".github/workflows/pages.yml"
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: true
-
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install dependencies
+      - name: Build the frontend
         working-directory: frontend
-        run: npm install
+        run: |
+          npm install
+          npm run build
 
-      - name: Build
-        working-directory: frontend
-        env:
-          VITE_API_BASE: https://nextgen-analytics-ai.fastapicloud.dev/api
-        run: npm run build
+      - name: Copy frontend build into backend/static
+        run: |
+          rm -rf backend/static
+          cp -r frontend/dist backend/static
 
-      - uses: actions/configure-pages@v5
-
-      - uses: actions/upload-pages-artifact@v3
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          path: frontend/dist
+          python-version: "3.12"
 
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Install FastAPI Cloud CLI
+        run: pip install "fastapi[standard]"
+
+      - name: Deploy to FastAPI Cloud
+        working-directory: backend
+        run: fastapi deploy
+        env:
+          FASTAPI_CLOUD_TOKEN: ${{ secrets.FASTAPI_CLOUD_TOKEN }}
+          FASTAPI_CLOUD_APP_ID: ${{ secrets.FASTAPI_CLOUD_APP_ID }}
